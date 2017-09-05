@@ -1,4 +1,4 @@
-# MODULE desktop::scitools/default-current  -->  ENV-TAG:env-default-2017_06_07
+MODULE desktop::scitools/default-current  -->  ENV-TAG:env-default-2017_06_07
 agg-regrid-0.1.0-py27_0
 alabaster-0.7.9-py27_0
 babel-2.3.4-py27_0
