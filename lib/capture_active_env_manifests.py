@@ -1,3 +1,4 @@
+#!/usr/bin/env python2.7
 """
 Capture package info for currently installed SSS environments.
 
@@ -88,6 +89,7 @@ def grab_envs(platform, output_dirpath, git_dir, ssh_host=None):
 
         # Split the path + look for the bit that matches a date.
         env_type_str = None
+        previous_part = None
         for part in os_path.split(os.sep):
             if datematch_re.match(part):
                 env_type_str, env_date_str = previous_part, part
@@ -136,15 +138,33 @@ def grab_envs(platform, output_dirpath, git_dir, ssh_host=None):
 
 timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
 main_dirname = 'manifests_{}'.format(timestamp)
-main_dirpath = os.path.join(os.getcwd(), main_dirname)
+own_dirpath = os.path.dirname(os.path.abspath(__file__))
+main_dirpath = os.sep.join([own_dirpath, '..',
+                            'datastore', 'env_info', 'samples',
+                            main_dirname])
 main_dirpath = os.path.abspath(main_dirpath)
 
+# Paste in a reference copy of the "old" scitools stack.
+ref_filename = 'old-scitools-manifest.txt'
+ref_filepath_from = os.sep.join(
+    [main_dirpath, '..', '..', 'legacy_reference', ref_filename])
+ref_filepath_from = os.path.abspath(ref_filepath_from)
+assert os.path.exists(ref_filepath_from), 'NO FILE: {}'.format(ref_filepath_from)
+
+output_dirpath=os.path.join(main_dirpath, 'legacy')
+ref_filepath_to = os.path.join(output_dirpath, ref_filename)
+if not os.path.exists(output_dirpath):
+    os.makedirs(output_dirpath)
+shutil.copy(ref_filepath_from, ref_filepath_to)
+
+# Snapshot the HPC envs
 grab_envs(
     platform='hpc',
     output_dirpath=os.path.join(main_dirpath, 'hpc'),
     git_dir='/net/home/h05/itpp/git/sss/crayhpc-environments',
     ssh_host='xcfl00')
 
+# Snapshot the desktop envs
 grab_envs(
     platform='desktop',
     output_dirpath=os.path.join(main_dirpath, 'desktop'),
