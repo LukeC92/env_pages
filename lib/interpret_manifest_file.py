@@ -76,10 +76,15 @@ if __name__ == '__main__':
     import os
     import os.path
 
-    oldstyle_filepath = \
-        './manifests_2017-08-03_16:41:15/desktop/desktop_default-current.manifest.txt'
-    newstyle_filepath = \
-        './newstyle_manifests/desktop_default-current.manifest.txt'
+    own_dirpath = os.path.dirname(os.path.abspath(__file__))
+    envs_dirpath = os.path.abspath(os.sep.join(
+        [own_dirpath, '..', 'datastore', 'env_info']))
+    oldstyle_filepath = os.path.abspath(os.sep.join(
+        [envs_dirpath, 'samples', 'manifests_2017-08-03_16:41:15',
+         'desktop', 'desktop_default-current.manifest.txt']))
+    newstyle_filepath = os.path.abspath(os.sep.join(
+        [envs_dirpath, 'newstyle_manifests',
+        'desktop_default-current.manifest.txt']))
     files_dicts = {}
     for filepath in (oldstyle_filepath, newstyle_filepath):
         print
@@ -92,7 +97,8 @@ if __name__ == '__main__':
     print
     print 'SAME? : ', files_dicts.values()[0] == files_dicts.values()[1]
 
-    legacy_filepath = './old-scitools-manifest.txt'
+    legacy_filepath = os.path.abspath(os.sep.join(
+        [envs_dirpath, 'legacy_reference', 'old-scitools-manifest.txt']))
     filepath = legacy_filepath
     print
     print 'LEGACY FILE: ', filepath
